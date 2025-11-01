@@ -74,12 +74,3 @@ CREATE TABLE MovementTransaction (
     movement_id BIGINT,
     FOREIGN KEY (movement_id) REFERENCES Movement(id) ON DELETE CASCADE
 );
-
-CREATE TABLE MovementLink (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    previous_movement_id BIGINT,
-    next_movement_id BIGINT,
-    movement_id BIGINT,
-    link_description VARCHAR(255),
-    FOREIGN KEY (movement_id) REFERENCES Movement(id) ON DELETE CASCADE
-);

@@ -10,6 +10,8 @@ export const MySQLDataSource = new DataSource({
     username: process.env.DB_USERNAME || "root",
     password: process.env.DB_PASSWORD || "root",
     database: process.env.DB_NAME || "test",
-    //entities: [Images, Plan, Person, Message, Payment],
-    logging: true
+    entities: ["./src/models/**/*.ts"],
+    migrations: ["./src/migrations/*.ts"],
+    logging: true,
+    synchronize: false,
 });
