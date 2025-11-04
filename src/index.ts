@@ -5,12 +5,13 @@ import { createExpressServer } from 'routing-controllers';
 //import Teste from './controllers/Teste';
 import { MySQLDataSource } from './configs/DataBaseConfig';
 import Logger from './configs/LoggerConfig';
+import AuthController from './controllers/AuthController';
 
 const app = createExpressServer({
     cors: true,
     routePrefix: '/api',
     //middlewares: [],
-    //controllers: [Teste]
+    controllers: [AuthController]
 });
 
 app.use(express.json());

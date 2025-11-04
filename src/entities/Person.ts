@@ -16,17 +16,16 @@ export default class Person {
     password: string;
 
     @Column({ type: "enum", enum: ["VIVO", "MORTO"], default: "VIVO" })
-    status: string;
+    status!: string;
 
-    constructor(name: string,
+    constructor(
+        name: string,
         email: string, 
         password: string,
-        status: string
     ) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.status = status;
     }
 
     public getId(): number | undefined {
