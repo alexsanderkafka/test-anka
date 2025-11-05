@@ -11,6 +11,9 @@ export default class AuthController {
 
     @Post('/create')
     public async create(@Body() body: any, @Res() res: any, @Req() req: Request): Promise<any> {
+
+        //limite de caracteres na password
+        
         const dto: PersonDTO = JSON.parse(JSON.stringify(body));
 
         if (!dto.name || !dto.email || !dto.password){
