@@ -29,6 +29,7 @@ CREATE TABLE HistorySimulation (
 
 CREATE TABLE Allocation (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    external_id VARCHAR(36) NOT NULL UNIQUE,
     name VARCHAR(50) NOT NULL,
     type ENUM('FINANCEIRA', 'IMOBILIZADA') NOT NULL,
     person_id BIGINT,
@@ -45,12 +46,12 @@ CREATE TABLE FinancialAllocation (
 
 CREATE TABLE FixedAssetAllocation (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    monthly_value DECIMAL(10, 2) NOT NULL,
+    value DECIMAL(10, 2) NOT NULL,
     has_financing BOOLEAN NOT NULL,
     installments INT,
     start_date DATE NOT NULL,
-    end_date DATE NOT NULL,
-    tax DECIMAL(10, 2) NOT NULL,
+    end_date DATE,
+    tax DECIMAL(10, 2),
     down_payment DECIMAL(10, 2),
     allocation_id BIGINT,
     FOREIGN KEY (allocation_id) REFERENCES Allocation(id)

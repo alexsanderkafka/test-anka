@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import Person from "./Person";
 
 @Entity("allocation")
@@ -6,6 +6,9 @@ export default class Allocation{
 
     @PrimaryGeneratedColumn({ type: "bigint" })
     private id!: number;
+
+    @Column({ type: "varchar", length: 36,  name: "external_id", unique: true })
+    externalId!: string;
 
     @Column({ type: "varchar", length: 50, nullable: false })
     name: string;
@@ -29,6 +32,11 @@ export default class Allocation{
 
     getId(): number {
         return this.id;
+    }
+
+    @BeforeInsert()
+    private generateUUID() {
+        this.externalId = crypto.randomUUID();
     }
 
 

@@ -14,4 +14,10 @@ export default class PersonRepository {
             where: { email }
         });
     }
+
+    public async findByExternalId(externalId: string): Promise<Person | null> {
+        return this.ormRepository.findOne({
+            where: { externalId }
+        });
+    }
 }

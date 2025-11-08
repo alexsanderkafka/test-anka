@@ -7,47 +7,51 @@ export default class FixedAssetAllocation {
     id!: number;
 
     @Column({ type: "decimal", precision: 10, scale: 2, nullable: false })
-    monthly_value: number;
+    value: number;
 
-    @Column({ type: "boolean", nullable: false })
-    has_financing: boolean;
+    @Column({ type: "boolean", nullable: false, name: "has_financing" })
+    hasFinancing: boolean;
 
     @Column({ type: "int", nullable: true })
-    installments: number;
+    installments?: number | null | undefined;
 
-    @Column({ type: "date", nullable: false })
-    start_date: Date;
+    @Column({ type: "date", nullable: false, name: "start_date" })
+    startDate: Date;
 
-    @Column({ type: "date", nullable: false })
-    end_date: Date;
-
-    @Column({ type: "decimal", precision: 10, scale: 2, nullable: false })
-    tax: number;
+    @Column({ type: "date", nullable: true, name: "end_date" })
+    private endDate?: Date | null | undefined;
 
     @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
-    down_payment: number;
+    tax?: number | null | undefined;
+
+    @Column({ type: "decimal", precision: 10, scale: 2, nullable: true, name: "down_payment" })
+    downPayment?: number | null | undefined;
 
     @ManyToOne(() => Allocation, (allocation) => allocation.getId)
     @JoinColumn({ name: "allocation_id" })
     allocation: Allocation;
 
   constructor(
-    monthly_value: number,
-    has_financing: boolean,
-    start_date: Date,
-    end_date: Date,
-    tax: number,
-    installments: number,
-    down_payment: number,
+    value: number,
+    hasFinancing: boolean,
+    startDate: Date,
     allocation: Allocation,
+    endDate?: Date | null | undefined,
+    tax?: number | null | undefined,
+    installments?: number | null | undefined,
+    downPayment?: number | null | undefined,
   ) {
-    this.monthly_value = monthly_value;
-    this.has_financing = has_financing;
-    this.start_date = start_date;
-    this.end_date = end_date;
+    this.value = value;
+    this.hasFinancing = hasFinancing;
+    this.startDate = startDate;
+    this.endDate = endDate;
     this.tax = tax;
     this.installments = installments;
-    this.down_payment = down_payment;
+    this.downPayment = downPayment;
     this.allocation = allocation;
+  }
+
+  public setEndDate(endDate: Date): void {
+    this.endDate = endDate;
   }
 }

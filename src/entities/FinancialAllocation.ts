@@ -9,8 +9,11 @@ export default class FinancialAllocation {
     @Column({ type: "decimal", precision: 10, scale: 2, nullable: false })
     amount: number;
 
-    @Column({ type: "date", nullable: false })
-    allocation_date: Date;
+    @Column({ type: "date", nullable: false, name: "allocation_date", transformer: {
+        from: (value: string) => new Date(value),
+        to: (value: Date) => value.toISOString().split('T')[0],
+    }})
+    allocationDate: Date;
 
     @ManyToOne(() => Allocation, (allocation) => allocation.getId)
     @JoinColumn({ name: "allocation_id" })
@@ -18,11 +21,11 @@ export default class FinancialAllocation {
 
     constructor(
         amount: number,
-        allocation_date: Date,
+        allocationDate: Date,
         allocation: Allocation
     ){
         this.amount = amount;
-        this.allocation_date = allocation_date;
+        this.allocationDate = allocationDate;
         this.allocation = allocation;
     
     }
