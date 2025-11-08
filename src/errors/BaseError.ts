@@ -1,12 +1,12 @@
 import { HttpError } from "routing-controllers";
 
-export default class EmptyField extends HttpError{
+export default class BaseError extends HttpError {
     private msg: string;
 
-    constructor(msg: string) {
-        super(400);
+    constructor(msg: string, statusCode: number) {
+        super(statusCode);
         this.msg = msg;
-        Object.setPrototypeOf(this, EmptyField.prototype);
+        Object.setPrototypeOf(this, BaseError.prototype);
     }
 
     toJSON() {

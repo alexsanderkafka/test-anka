@@ -1,10 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("person")
 export default class Person {
 
     @PrimaryGeneratedColumn({ type: "bigint" })
     private id!: number;
+
+    @Column({ type: "varchar", length: 36,  name: "external_id", unique: true })
+    externalId!: string;
 
     @Column({ type: "varchar", length: 150 })
     name: string;
@@ -30,5 +33,10 @@ export default class Person {
 
     public getId(): number | undefined {
         return this.id;
+    }
+
+    @BeforeInsert()
+    private generateUUID() {
+        this.externalId = crypto.randomUUID();
     }
 }

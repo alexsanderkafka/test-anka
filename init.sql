@@ -1,5 +1,6 @@
 CREATE TABLE Person (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    external_id VARCHAR(36) NOT NULL UNIQUE,
     name VARCHAR(150) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     password TEXT NOT NULL,
@@ -12,7 +13,7 @@ CREATE TABLE Insurance (
     start_date DATE NOT NULL,
     duration INT NOT NULL,
     monthly_value DECIMAL(10, 2) NOT NULL,
-    insured_value DECIMAL(100, 2) NOT NULL,
+    insured_value DECIMAL(10, 2) NOT NULL,
     person_id BIGINT,
     FOREIGN KEY (person_id) REFERENCES Person(id)
 );

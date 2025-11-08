@@ -1,7 +1,7 @@
 import { Body, JsonController, Post, Req, Res } from "routing-controllers";
 import type PersonDTO from "../dto/PersonDTO";
 import AuthService from "../service/AuthService";
-import EmptyField from "../errors/EmptyFields";
+import EmptyField from "../errors/EmptyFieldsError";
 
 
 @JsonController('/auth')
@@ -20,8 +20,8 @@ export default class AuthController {
             throw new EmptyField('Empty field');
         }
 
-        const result: any = await this.authService.createUser(dto);
+        await this.authService.createUser(dto);
 
-        return res.status(200).json({ message: 'User created successfully', data: result });
+        return res.status(200).json({ message: 'User created successfully' });
     }
 }

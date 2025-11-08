@@ -8,4 +8,10 @@ export default class PersonRepository {
     public async save(person: Person): Promise<any> {
         return this.ormRepository.save(person);
     }
+
+    public async findByEmail(email: string): Promise<Person | null> {
+        return this.ormRepository.findOne({
+            where: { email }
+        });
+    }
 }
