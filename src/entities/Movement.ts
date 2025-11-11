@@ -25,7 +25,7 @@ export default class Movement {
     @Column({ type: "date", nullable: true })
     end_date: Date;
 
-    @ManyToOne(() => Person, (person) => person.getId)
+    @ManyToOne(() => Person)
     @JoinColumn({ name: "person_id" })
     person: Person;
 

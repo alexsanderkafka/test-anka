@@ -1,4 +1,4 @@
-import { Body, Delete, Get, HttpCode, JsonController, Param, Post, Put, Res } from "routing-controllers";
+import { Body, Delete, Get, HttpCode, JsonController, Param, Post, Put, QueryParam, Res } from "routing-controllers";
 import type FinancialAllocationDTO from "../dto/FinancialAllocationDTO";
 import AllocationService from "../service/AllocationService";
 import type FixedAssetAllocationDTO from "../dto/FixedAssetAllocationDTO";
@@ -23,23 +23,25 @@ export default class AllocationController {
         return res.status(200).json({ message: "Fixed allocation created successfully" });
     }
 
-    @Get("/:personExternalId")
-    public async findAll(@Param("personExternalId") personExternalId: string) {
-        return { message: "All allocations fetched successfully", data: [] };
-    }
-
     @Get("/:externalId")
-    public async findOne(@Param("externalId") externalId: string) {
-        return { message: `Allocation ${externalId} fetched successfully`, data: { externalId } };
-    }
+    public async findOne(@Param("externalId") externalId: string, @Res() res: any) 
+    {
+        const dto = await this.allocationService.getAllocationByExternalId(externalId);
 
-    @Put("/:externalId")
-    public async update(@Param("externalId") externalId: string, @Body() body: any) {
-        return { message: `Allocation ${externalId} updated successfully`, data: body };
+        //criar DTO de res
+        //resolver o problema do null na relação
+        
+        return res.status(200).json(dto);
     }
+ 
+    @Get("/all/:personExternalId")
+    public async findAll(@Param("personExternalId") personExternalId: string, @QueryParam("page", {required: false}) page: number = 1, @QueryParam("limit", {required: false,}) limit: number = 10,  @Res() res: any) {
 
-    @Delete("/:externalId")
-    public async delete(@Param("externalId") externalId: string) {
-        return { message: `Allocation ${externalId} deleted successfully` };
+        const dto = await this.allocationService.getAllAllocationsByPersonExternalId(personExternalId, page, limit);
+
+        //criar DTO de res
+        //resolver o problema do null na relação
+
+        return res.status(200).json(dto);
     }
 }

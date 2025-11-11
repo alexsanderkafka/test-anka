@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import Allocation from "./Allocation";
 
 @Entity("fixedassetallocation")
@@ -27,7 +27,7 @@ export default class FixedAssetAllocation {
     @Column({ type: "decimal", precision: 10, scale: 2, nullable: true, name: "down_payment" })
     downPayment?: number | null | undefined;
 
-    @ManyToOne(() => Allocation, (allocation) => allocation.getId)
+    @OneToOne(() => Allocation, (allocation) => allocation.fixedAssetAllocation)
     @JoinColumn({ name: "allocation_id" })
     allocation: Allocation;
 

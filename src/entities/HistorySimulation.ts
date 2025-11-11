@@ -17,7 +17,7 @@ export class HistorySimulation {
     @Column({ type: "date", nullable: false })
     start_date: Date;
 
-    @ManyToOne(() => Person, (person) => person.getId)
+    @ManyToOne(() => Person)
     @JoinColumn({ name: "person_id" })
     person: Person;
 

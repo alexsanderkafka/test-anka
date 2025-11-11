@@ -13,7 +13,7 @@ export default class MovementTransaction {
     @Column({ type: "decimal", precision: 10, scale: 2, nullable: false })
     amount: number;
 
-    @ManyToOne(() => Movement, (movement) => movement.getId, {onDelete: "CASCADE", nullable: false,})
+    @ManyToOne(() => Movement, {onDelete: "CASCADE", nullable: false,})
     @JoinColumn({ name: "movement_id" })
     movement: Movement;
 

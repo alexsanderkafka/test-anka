@@ -22,7 +22,7 @@ export default class Insurance {
     @Column({ type: "decimal", precision: 100, scale: 2, nullable: false})
     insured_value: number;
 
-    @ManyToOne(() => Person, (person) => person.getId)
+    @ManyToOne(() => Person)
     @JoinColumn({ name: "person_id" })
     person: Person;
 

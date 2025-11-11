@@ -1,11 +1,13 @@
-import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import Person from "./Person";
+import FinancialAllocation from "./FinancialAllocation";
+import FixedAssetAllocation from "./FixedAssetAllocation";
 
 @Entity("allocation")
 export default class Allocation{
 
     @PrimaryGeneratedColumn({ type: "bigint" })
-    private id!: number;
+    id!: number;
 
     @Column({ type: "varchar", length: 36,  name: "external_id", unique: true })
     externalId!: string;
@@ -16,9 +18,15 @@ export default class Allocation{
     @Column({ type: "enum", enum: ["FINANCEIRA", "IMOBILIZADA"],  nullable: false})
     type: string;
 
-    @ManyToOne(() => Person, (person) => person.getId)
+    @ManyToOne(() => Person)
     @JoinColumn({ name: "person_id" })
     person: Person;
+
+    @OneToOne(() => FinancialAllocation, (fa) => fa.allocation)
+    financialAllocation?: FinancialAllocation;
+
+    @OneToOne(() => FixedAssetAllocation, (fxa) => fxa.allocation)
+    fixedAssetAllocation?: FixedAssetAllocation;
 
     constructor(
         name: string,

@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import Allocation from "./Allocation";
 
 @Entity("financialallocation")
@@ -15,7 +15,7 @@ export default class FinancialAllocation {
     }})
     allocationDate: Date;
 
-    @ManyToOne(() => Allocation, (allocation) => allocation.getId)
+    @OneToOne(() => Allocation, (allocation) => allocation.getId)
     @JoinColumn({ name: "allocation_id" })
     allocation?: Allocation;
 

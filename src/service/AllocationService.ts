@@ -80,5 +80,27 @@ export default class AllocationService{
 
         this.fixedAssetAllocationRepository.save(fixedAssetAllocation);
     }
+
+    public async getAllocationByExternalId(externalId: string): Promise<Allocation> {
+        const allocation: Allocation | null = await this.allocationRepository.findByExternalId(externalId);
+
+        Logger.info(`Fetched allocation: ${JSON.stringify(allocation)}`);
+
+        if(!allocation){
+            throw new NotFoundEntityError('Allocation not found');
+        }
+
+        return allocation;
+    }
+
+    public async getAllAllocationsByPersonExternalId(personExternalId: string, page: number, limit: number): Promise<Allocation[]>{
+        const person: Person | null = await this.personRepository.findByExternalId(personExternalId);
+
+        if(!person){
+            throw new NotFoundEntityError('User not found');
+        }
+
+        return this.allocationRepository.findAllByPersonExternalId(personExternalId, page, limit);
+    }
     
 }
