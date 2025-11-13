@@ -3,20 +3,20 @@ import Person from "../entities/Person";
 
 export default class PersonRepository {
 
-    private ormRepository = MySQLDataSource.getRepository(Person);
+    private orm = MySQLDataSource.getRepository(Person);
 
     public async save(person: Person): Promise<any> {
-        return this.ormRepository.save(person);
+        return this.orm.save(person);
     }
 
     public async findByEmail(email: string): Promise<Person | null> {
-        return this.ormRepository.findOne({
+        return this.orm.findOne({
             where: { email }
         });
     }
 
     public async findByExternalId(externalId: string): Promise<Person | null> {
-        return this.ormRepository.findOne({
+        return this.orm.findOne({
             where: { externalId }
         });
     }

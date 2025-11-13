@@ -15,7 +15,7 @@ export default class FinancialAllocation {
     }})
     allocationDate: Date;
 
-    @OneToOne(() => Allocation, (allocation) => allocation.getId)
+    @OneToOne(() => Allocation, (allocation) => allocation.financialAllocation)
     @JoinColumn({ name: "allocation_id" })
     allocation?: Allocation;
 

@@ -1,12 +1,15 @@
 
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import Person from "./Person";
 
-@Entity()
+@Entity("historysimulation")
 export class HistorySimulation {
 
     @PrimaryGeneratedColumn({ type: "bigint" })
-    private id!: number;
+    id!: number;
+
+    @Column({ type: "varchar", length: 36,  name: "external_id", unique: true })
+    externalId!: string;
 
     @Column({ type: "varchar", length: 50, nullable: false })
     name: string;
@@ -35,5 +38,10 @@ export class HistorySimulation {
 
     getId(): number | undefined {
         return this.id;
+    }
+
+    @BeforeInsert()
+    private generateUUID() {
+        this.externalId = crypto.randomUUID();
     }
 }

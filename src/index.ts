@@ -2,17 +2,17 @@ import 'reflect-metadata';
 import 'dotenv/config';
 import express from 'express';
 import { createExpressServer } from 'routing-controllers';
-//import Teste from './controllers/Teste';
 import { MySQLDataSource } from './configs/DataBaseConfig';
 import Logger from './configs/LoggerConfig';
 import AuthController from './controllers/AuthController';
 import AllocationController from './controllers/AllocationController';
+import HistorySimulationController from './controllers/HistorySimulationController';
 
 const app = createExpressServer({
     cors: true,
     routePrefix: '/api',
     //middlewares: [],
-    controllers: [AuthController, AllocationController]
+    controllers: [AuthController, AllocationController, HistorySimulationController]
 });
 
 app.use(express.json());

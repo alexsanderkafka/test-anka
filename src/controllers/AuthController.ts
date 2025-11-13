@@ -22,6 +22,6 @@ export default class AuthController {
 
         await this.authService.createUser(dto);
 
-        return res.status(200).json({ message: 'User created successfully' });
+        return res.status(201).json({ message: 'User created successfully' });
     }
 }

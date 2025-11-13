@@ -81,7 +81,7 @@ export default class AllocationService{
         this.fixedAssetAllocationRepository.save(fixedAssetAllocation);
     }
 
-    public async getAllocationByExternalId(externalId: string): Promise<Allocation> {
+    public async getOneAllocationByExternalId(externalId: string): Promise<Allocation> {
         const allocation: Allocation | null = await this.allocationRepository.findByExternalId(externalId);
 
         Logger.info(`Fetched allocation: ${JSON.stringify(allocation)}`);

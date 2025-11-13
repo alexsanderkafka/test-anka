@@ -12,7 +12,7 @@ export default class AllocationController {
     public async addNewFinancialAllocation(@Body() body: FinancialAllocationDTO, @Param("personExternalId") personExternalId: string, @Res() res: any) {
         await this.allocationService.createNewFinancialAllocation(body, personExternalId);
         
-        return res.status(200).json({ message: "Financial allocation created successfully" });
+        return res.status(201).json({ message: "Financial allocation created successfully" });
     }
 
     @Post("/fixed-asset/:personExternalId")
@@ -20,13 +20,13 @@ export default class AllocationController {
         
         await this.allocationService.createNewFixedAssetAllocation(body, personExternalId)
 
-        return res.status(200).json({ message: "Fixed allocation created successfully" });
+        return res.status(201).json({ message: "Fixed allocation created successfully" });
     }
 
     @Get("/:externalId")
     public async findOne(@Param("externalId") externalId: string, @Res() res: any) 
     {
-        const dto = await this.allocationService.getAllocationByExternalId(externalId);
+        const dto = await this.allocationService.getOneAllocationByExternalId(externalId);
 
         //criar DTO de res
         //resolver o problema do null na relação

@@ -19,7 +19,7 @@ export default class Insurance {
     @Column({ type: "decimal", precision: 10, scale: 2, nullable: false})
     monthly_value: number;
 
-    @Column({ type: "decimal", precision: 100, scale: 2, nullable: false})
+    @Column({ type: "decimal", precision: 10, scale: 2, nullable: false})
     insured_value: number;
 
     @ManyToOne(() => Person)

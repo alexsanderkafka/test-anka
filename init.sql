@@ -20,6 +20,7 @@ CREATE TABLE Insurance (
 
 CREATE TABLE HistorySimulation (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    external_id VARCHAR(36) NOT NULL UNIQUE,
     name VARCHAR(50) NOT NULL,
     tax DECIMAL(10, 2) NOT NULL DEFAULT 4.00,
     start_date DATE NOT NULL,
