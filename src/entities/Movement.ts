@@ -1,14 +1,17 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import Person from "./Person";
 
 @Entity("movement")
 export default class Movement {
     
     @PrimaryGeneratedColumn({ type: "bigint" })
-    private id!: number;
+    id!: number;
 
     @Column({ type: "enum", enum: ["DESPESA", "RENDA"], nullable: false})
     type: string;
+
+    @Column({ type: "varchar", length: 36,  name: "external_id", unique: true })
+    externalId!: string;
 
     @Column({ type: "decimal", precision: 10, scale: 2, nullable: false })
     amount: number;
@@ -19,11 +22,11 @@ export default class Movement {
     @Column({ type: "enum", enum: ["UNICA", "MENSAL", "ANUAL"], nullable: false,})
     frequency: string;
 
-    @Column({ type: "date", nullable: false })
-    start_date: Date;
+    @Column({ type: "date", nullable: false, name: "start_date" })
+    startDate: Date;
 
-    @Column({ type: "date", nullable: true })
-    end_date: Date;
+    @Column({ type: "date", nullable: true, name: "end_date" })
+    endDate: Date;
 
     @ManyToOne(() => Person)
     @JoinColumn({ name: "person_id" })
@@ -33,21 +36,26 @@ export default class Movement {
         type: string,
         amount: number,
         frequency: string,
-        start_date: Date,
+        startDate: Date,
         description: string,
-        end_date: Date,
+        endDate: Date,
         person: Person
     ) {
         this.type = type;
         this.amount = amount;
         this.frequency = frequency;
-        this.start_date = start_date;
+        this.startDate = startDate;
         this.description = description;
-        this.end_date = end_date;
+        this.endDate = endDate;
         this.person = person;
     }
 
     getId(): number {
         return this.id;
+    }
+
+    @BeforeInsert()
+    private generateUUID() {
+        this.externalId = crypto.randomUUID();
     }
 }

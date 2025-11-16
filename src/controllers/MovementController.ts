@@ -1,30 +1,52 @@
-import { Body, Delete, Get, JsonController, Param, Post, Put } from "routing-controllers";
+import { Body, Delete, Get, JsonController, Param, Post, Put, QueryParam, Res} from "routing-controllers";
+import MovementService from "../service/MovementService";
+import type MovementDTO from "../dto/MovementDTO";
+import type Movement from "../entities/Movement";
 
 @JsonController("/movement")
 export default class MovementController {
+
+    private movementService: MovementService = new MovementService();
     
-    @Post()
-    public async create(@Body() body: any) {
-        return { message: "Allocation created successfully", data: body };
+    @Post("/:personExternalId")
+    public async addNewMovement(@Body() body: MovementDTO, @Param("personExternalId") personExternalId: string, @Res() res: any) {
+        await this.movementService.createNewInsurance(body, personExternalId);
+
+        return res.status(201).json();
+    }   
+        
+    @Get("/:externalId")
+    public async findOne(@Param("externalId") externalId: string, @Res() res: any) {
+        const result: Movement = await this.movementService.getOneMovement(externalId);
+
+        //criar o dto de res
+        
+        return res.status(200).json(result);
+    }
+
+    @Get("/all/:personExternalId")
+    public async findAll(@Param("personExternalId") personExternalId: string, @Res() res: any, @QueryParam("page", {required: false}) page: number = 1, @QueryParam("limit", {required: false}) limit: number = 10) {
+        const movements: Movement[] = await this.movementService.getAllMovementsByPersonExternalId(personExternalId, page, limit);
+
+        //criar o dto de res
+
+        return res.status(200).json(movements);
     }
         
-    @Get()
-    public async findAll() {
-        return { message: "All allocations fetched successfully", data: [] };
+    @Put("/:externalId")
+    public async update(@Param("externalId") externalId: string, @Body() body: MovementDTO, @Res() res: any) {
+        const result: Movement = await this.movementService.updateOneInsurance(externalId, body);
+        
+        //Criar o dto de res
+        //Resolver o problema dos types no dto
+
+        return res.status(200).json(result);
     }
         
-    @Get("/:id")
-    public async findOne(@Param("id") id: number) {
-        return { message: `Allocation ${id} fetched successfully`, data: { id } };
-    }
+    @Delete("/:externalId")
+    public async delete(@Param("externalId") externalId: string, @Res() res: any) {
+        await this.movementService.deleteOne(externalId);
         
-    @Put("/:id")
-    public async update(@Param("id") id: number, @Body() body: any) {
-        return { message: `Allocation ${id} updated successfully`, data: body };
-    }
-        
-    @Delete("/:id")
-    public async delete(@Param("id") id: number) {
-        return { message: `Allocation ${id} deleted successfully` };
+        return res.status(204).json();
     }
 }

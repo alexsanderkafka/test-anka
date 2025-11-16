@@ -61,6 +61,7 @@ CREATE TABLE FixedAssetAllocation (
 
 CREATE TABLE Movement (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    external_id VARCHAR(36) NOT NULL UNIQUE,
     type ENUM('DESPESA', 'RENDA') NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
     description VARCHAR(255),

@@ -8,12 +8,13 @@ import AuthController from './controllers/AuthController';
 import AllocationController from './controllers/AllocationController';
 import HistorySimulationController from './controllers/HistorySimulationController';
 import InsuranceController from './controllers/InsuranceController';
+import MovementController from './controllers/MovementController';
 
 const app = createExpressServer({
     cors: true,
     routePrefix: '/api',
     //middlewares: [],
-    controllers: [AuthController, AllocationController, HistorySimulationController, InsuranceController]
+    controllers: [AuthController, AllocationController, HistorySimulationController, InsuranceController, MovementController]
 });
 
 app.use(express.json());
