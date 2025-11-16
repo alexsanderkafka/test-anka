@@ -9,7 +9,7 @@ export default class AllocationRepository{
         return this.orm.save(allocation);
     }
 
-    public async findOneByExternalId(externalId: string): Promise<Allocation | null> {
+    public async findByExternalId(externalId: string): Promise<Allocation | null> {
         return this.orm.findOne({
             where: {externalId: externalId},
             relations: ["person", "financialAllocation", "fixedAssetAllocation"]

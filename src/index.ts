@@ -7,12 +7,13 @@ import Logger from './configs/LoggerConfig';
 import AuthController from './controllers/AuthController';
 import AllocationController from './controllers/AllocationController';
 import HistorySimulationController from './controllers/HistorySimulationController';
+import InsuranceController from './controllers/InsuranceController';
 
 const app = createExpressServer({
     cors: true,
     routePrefix: '/api',
     //middlewares: [],
-    controllers: [AuthController, AllocationController, HistorySimulationController]
+    controllers: [AuthController, AllocationController, HistorySimulationController, InsuranceController]
 });
 
 app.use(express.json());

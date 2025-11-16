@@ -1,30 +1,50 @@
-import { Body, Delete, Get, JsonController, Param, Post, Put } from "routing-controllers";
+import { Body, Delete, Get, JsonController, Param, Post, Put, QueryParam, Res } from "routing-controllers";
+import type InsuranceDTO from "../dto/InsuranceDTO";
+import InsuranceService from "../service/InsuranceService";
+import type Insurance from "../entities/Insurance";
 
 @JsonController("/insurance")
 export default class InsuranceController {
+
+    private insuranceService: InsuranceService = new InsuranceService();
     
-    @Post()
-    public async create(@Body() body: any) {
-        return { message: "Allocation created successfully", data: body };
+    @Post("/:personExternalId")
+    public async addNewInsurance(@Body() body: InsuranceDTO, @Param("personExternalId") personExternalId: string, @Res() res: any) {
+        await this.insuranceService.createNewInsurance(body, personExternalId);
+
+        return res.status(201).json();
+    }
+
+    @Get("/:externalId")
+    public async findOne(@Param("externalId") externalId: string, @Res() res: any) {
+        const result: Insurance = await this.insuranceService.getOneInsurance(externalId);
+
+        //Criar o dto de res
+        
+        return res.status(200).json(result);
     }
         
-    @Get()
-    public async findAll() {
-        return { message: "All allocations fetched successfully", data: [] };
-    }
+    @Get("/all/:personExternalId")
+    public async findAll(@Param("personExternalId") personExternalId: string, @Res() res: any, @QueryParam("page", {required: false}) page: number = 1, @QueryParam("limit", {required: false}) limit: number = 10) {
+        const result: Insurance[] = await this.insuranceService.getAllInsuranceByPersonExternalId(personExternalId, page, limit);
+
+        //Criar o dto de res
         
-    @Get("/:id")
-    public async findOne(@Param("id") id: number) {
-        return { message: `Allocation ${id} fetched successfully`, data: { id } };
+        return res.status(200).json(result);
     }
        
-    @Put("/:id")
-    public async update(@Param("id") id: number, @Body() body: any) {
-        return { message: `Allocation ${id} updated successfully`, data: body };
+    @Put("/:externalId")
+    public async update(@Param("externalId") externalId: string, @Body() body: InsuranceDTO, @Res() res: any) {
+        const result: Insurance = await this.insuranceService.updateOneInsurance(externalId, body);
+
+        //Criar o dto de res
+        return res.status(200).json(result);
     }
         
-    @Delete("/:id")
-    public async delete(@Param("id") id: number) {
-        return { message: `Allocation ${id} deleted successfully` };
+    @Delete("/:externalId")
+    public async delete(@Param("externalId") externalId: string, @Res() res: any) {
+        await this.insuranceService.deleteOne(externalId);
+
+        return res.status(204).json();
     }
 }

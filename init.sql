@@ -9,6 +9,7 @@ CREATE TABLE Person (
 
 CREATE TABLE Insurance (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    external_id VARCHAR(36) NOT NULL UNIQUE,
     name VARCHAR(50) NOT NULL,
     start_date DATE NOT NULL,
     duration INT NOT NULL,

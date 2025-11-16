@@ -50,6 +50,12 @@ export default class HistorySimulationService{
     }
 
     public async deleteByExternalId(externalId: string){
+        const historySimulation: HistorySimulation | null = await this.historySimulationRepository.findOneByExternalId(externalId);
+
+        if(!historySimulation){
+            throw new NotFoundEntityError("History simulation not found");
+        }
+        
         await this.historySimulationRepository.delete(externalId);
     }
     

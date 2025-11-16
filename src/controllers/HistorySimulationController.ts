@@ -12,7 +12,7 @@ export default class HistorySimulationController {
     public async addNewAssetProjection(@Body() body: HistorySimulationDTO, @Param("personExternalId") personExternalId: string, @Res() res: any) {
         await this.historySimulationService.createNewHistorySimulation(body, personExternalId);
 
-        return res.status(201).json({ message: "History simulation created successfully" });
+        return res.status(201).json();
     }
     
     @Get("/:externalId")

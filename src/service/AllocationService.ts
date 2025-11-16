@@ -5,13 +5,13 @@ import type Person from "../entities/Person";
 import NotFoundEntityError from "../errors/NotFoundEntityError";
 import FinancialAllocationRepository from "../repository/FinancialAllocationRepository";
 import PersonRepository from "../repository/PersonRepository";
-import AllocationRepository from "../repository/AllocationRepository";
 import FinancialAllocation from "../entities/FinancialAllocation";
 import type FixedAssetAllocationDTO from "../dto/FixedAssetAllocationDTO";
 import FixedAssetAllocation from "../entities/FixedAssetAllocation";
 import FixedAssetAllocationRepository from "../repository/FixedAllocationRepository";
 import { start } from "repl";
 import Logger from "../configs/LoggerConfig";
+import AllocationRepository from "../repository/AllocationRepository";
 
 export default class AllocationService{
     private personRepository = new PersonRepository();
