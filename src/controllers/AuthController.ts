@@ -10,7 +10,7 @@ export default class AuthController {
     private authService: AuthService = new AuthService();
 
     @Post('/create')
-    public async create(@Body() body: any, @Res() res: any, @Req() req: Request): Promise<any> {
+    public async create(@Body() body: any, @Res() res: any, @Req() req: any) {
 
         //limite de caracteres na password
         

@@ -25,6 +25,4 @@ export default class MovementDTO{
         message: 'allocationDate must be in YYYY-MM-DD format',
     })
     public endDate!: string;
-
-
 }

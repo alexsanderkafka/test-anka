@@ -1,10 +1,15 @@
-import { IsString, IsNumber, Matches } from 'class-validator';
+import { IsString, IsNumber, Matches, IsNotEmpty } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export default class  FinancialAllocationDTO{
+    
     @IsString()
+    @IsNotEmpty()
     public name!: string;
 
     @IsNumber()
+    @Type(() => Number)
+    @IsNotEmpty()
     public amount!: number;
 
     @IsString()
