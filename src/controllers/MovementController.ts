@@ -1,7 +1,8 @@
 import { Body, Delete, Get, JsonController, Param, Post, Put, QueryParam, Res} from "routing-controllers";
 import MovementService from "../service/MovementService";
-import type MovementDTO from "../dto/MovementDTO";
+import type MovementDTO from "../dto/request/MovementDTO";
 import type Movement from "../entities/Movement";
+import type MovementResponseDTO from "../dto/response/MovementResponseDTO";
 
 @JsonController("/movement")
 export default class MovementController {
@@ -17,28 +18,21 @@ export default class MovementController {
         
     @Get("/:externalId")
     public async findOne(@Param("externalId") externalId: string, @Res() res: any) {
-        const result: Movement = await this.movementService.getOneMovement(externalId);
-
-        //criar o dto de res
+        const result: MovementResponseDTO = await this.movementService.getOneMovement(externalId);
         
         return res.status(200).json(result);
     }
 
     @Get("/all/:personExternalId")
     public async findAll(@Param("personExternalId") personExternalId: string, @Res() res: any, @QueryParam("page", {required: false}) page: number = 1, @QueryParam("limit", {required: false}) limit: number = 10) {
-        const movements: Movement[] = await this.movementService.getAllMovementsByPersonExternalId(personExternalId, page, limit);
-
-        //criar o dto de res
+        const movements: MovementResponseDTO[] = await this.movementService.getAllMovementsByPersonExternalId(personExternalId, page, limit);
 
         return res.status(200).json(movements);
     }
         
     @Put("/:externalId")
     public async update(@Param("externalId") externalId: string, @Body() body: MovementDTO, @Res() res: any) {
-        const result: Movement = await this.movementService.updateOneInsurance(externalId, body);
-        
-        //Criar o dto de res
-        //Resolver o problema dos types no dto
+        const result: MovementResponseDTO = await this.movementService.updateOneInsurance(externalId, body);
 
         return res.status(200).json(result);
     }

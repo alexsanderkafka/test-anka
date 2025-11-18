@@ -1,7 +1,9 @@
-import type MovementDTO from "../dto/MovementDTO";
+import type MovementDTO from "../dto/request/MovementDTO";
+import MovementResponseDTO from "../dto/response/MovementResponseDTO";
 import Movement from "../entities/Movement";
 import type Person from "../entities/Person";
 import NotFoundEntityError from "../errors/NotFoundEntityError";
+import Mapper from "../mapper/Mapper";
 import MovementRepository from "../repository/MovementRepository";
 import PersonRepository from "../repository/PersonRepository";
 
@@ -30,27 +32,29 @@ export default class MovementService{
         await this.movementRepository.save(movement);
     }
 
-    public async getOneMovement(externalId: string): Promise<Movement>{
+    public async getOneMovement(externalId: string): Promise<MovementResponseDTO>{
         const movement: Movement | null = await this.movementRepository.findOneByExternalId(externalId);
 
         if(!movement){
             throw new NotFoundEntityError("Movement not found");
         }
 
-        return movement;
+        return Mapper.toResponse(MovementResponseDTO, movement);
     }
 
-    public async getAllMovementsByPersonExternalId(personExternalId: string, page: number, limit: number): Promise<Movement[]>{
+    public async getAllMovementsByPersonExternalId(personExternalId: string, page: number, limit: number): Promise<MovementResponseDTO[]>{
         const person: Person | null = await this.personRepository.findByExternalId(personExternalId);
 
         if(!person){
             throw new NotFoundEntityError("User not found");
         }
 
-        return await this.movementRepository.findAllByPersonExternalId(personExternalId, page, limit);
+        const movements: Movement[] = await this.movementRepository.findAllByPersonExternalId(personExternalId, page, limit);
+
+        return Mapper.toResponseList(MovementResponseDTO, movements);
     }
 
-    public async updateOneInsurance(externalId: string, dto: MovementDTO): Promise<Movement>{
+    public async updateOneInsurance(externalId: string, dto: MovementDTO): Promise<MovementResponseDTO>{
         let movement: Movement | null = await this.movementRepository.findOneByExternalId(externalId);
 
         if(!movement){
@@ -64,7 +68,9 @@ export default class MovementService{
         movement.startDate = dto.startDate ? new Date(dto.startDate) : movement.startDate;
         movement.endDate = dto.endDate ? new Date(dto.endDate) : movement.endDate;
 
-        return await this.movementRepository.save(movement);
+        const savedMovement: Movement = await this.movementRepository.save(movement);
+
+        return Mapper.toResponse(MovementResponseDTO, savedMovement);
     }
 
     public async deleteOne(externalId: string){

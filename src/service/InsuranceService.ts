@@ -1,8 +1,10 @@
 import Logger from "../configs/LoggerConfig";
-import type InsuranceDTO from "../dto/InsuranceDTO";
+import type InsuranceDTO from "../dto/request/InsuranceDTO";
+import InsuranceResponseDTO from "../dto/response/InsuranceResponseDTO";
 import Insurance from "../entities/Insurance";
 import type Person from "../entities/Person";
 import NotFoundEntityError from "../errors/NotFoundEntityError";
+import Mapper from "../mapper/Mapper";
 import InsuranceRepository from "../repository/InsuranceRepository";
 import PersonRepository from "../repository/PersonRepository";
 
@@ -30,17 +32,17 @@ export default class InsuranceService{
         await this.insuranceRepository.save(insurance);    
     }
 
-    public async getOneInsurance(externalId: string): Promise<Insurance>{
+    public async getOneInsurance(externalId: string): Promise<InsuranceResponseDTO>{
         const insurance: Insurance | null = await this.insuranceRepository.findOneByExternalId(externalId);
 
         if(!insurance){
             throw new NotFoundEntityError("Insurance not found");
         }
 
-        return insurance;
+        return Mapper.toResponse(InsuranceResponseDTO, insurance);
     }
 
-    public async getAllInsuranceByPersonExternalId(personExternalId: string, page: number, limit: number): Promise<Insurance[]>{
+    public async getAllInsuranceByPersonExternalId(personExternalId: string, page: number, limit: number): Promise<InsuranceResponseDTO[]>{
         const person: Person | null = await this.personRepository.findByExternalId(personExternalId);
 
         if(!person){
@@ -48,10 +50,12 @@ export default class InsuranceService{
         
         }
 
-        return await this.insuranceRepository.findAllByPersonExternalId(personExternalId, page, limit);
+        const insurances: Insurance[] = await this.insuranceRepository.findAllByPersonExternalId(personExternalId, page, limit);
+
+        return Mapper.toResponseList(InsuranceResponseDTO, insurances);
     }
 
-    public async updateOneInsurance(externalId: string, dto: InsuranceDTO): Promise<Insurance>{
+    public async updateOneInsurance(externalId: string, dto: InsuranceDTO): Promise<InsuranceResponseDTO>{
         let insurance: Insurance | null = await this.insuranceRepository.findOneByExternalId(externalId);
 
         if(!insurance){
@@ -64,7 +68,9 @@ export default class InsuranceService{
         insurance.monthlyValue = dto.monthlyValue ?? insurance.monthlyValue;
         insurance.insuredValue = dto.insuredValue ?? insurance.insuredValue;
 
-        return this.insuranceRepository.save(insurance);
+        const updatedInsurance: Insurance = await this.insuranceRepository.save(insurance);
+
+        return Mapper.toResponse(InsuranceResponseDTO, updatedInsurance);
     }
 
     public async deleteOne(externalId: string){

@@ -4,7 +4,6 @@ import Person from "./Person";
 
 @Entity("historysimulation")
 export class HistorySimulation {
-
     @PrimaryGeneratedColumn({ type: "bigint" })
     id!: number;
 
@@ -17,8 +16,8 @@ export class HistorySimulation {
     @Column({ type: "decimal", precision: 10, scale: 2, nullable: false, default: 4.00 })
     tax: number;
 
-    @Column({ type: "date", nullable: false })
-    start_date: Date;
+    @Column({ type: "date", nullable: false, name: "start_date" })
+    startDate!: Date;
 
     @ManyToOne(() => Person)
     @JoinColumn({ name: "person_id" })
@@ -27,12 +26,12 @@ export class HistorySimulation {
     constructor(
             name: string,
             tax: number,
-            start_date: Date,
+            startDate: Date,
             person: Person
         ) {
             this.name = name;
             this.tax = tax;
-            this.start_date = start_date;
+            this.startDate = startDate;
             this.person = person;
     }
 

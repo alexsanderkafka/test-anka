@@ -1,4 +1,4 @@
-import type PersonDTO from "../dto/PersonDTO";
+import type PersonDTO from "../dto/request/PersonDTO";
 import Person from "../entities/Person";
 import ExistingUserError from "../errors/ExistingUserError";
 import PersonRepository from "../repository/PersonRepository";

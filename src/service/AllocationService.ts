@@ -1,17 +1,17 @@
-import { All } from "routing-controllers";
-import type FinancialAllocationDTO from "../dto/FinancialAllocationDTO";
+import type FinancialAllocationDTO from "../dto/request/FinancialAllocationDTO";
 import Allocation from "../entities/Allocation";
 import type Person from "../entities/Person";
 import NotFoundEntityError from "../errors/NotFoundEntityError";
 import FinancialAllocationRepository from "../repository/FinancialAllocationRepository";
 import PersonRepository from "../repository/PersonRepository";
 import FinancialAllocation from "../entities/FinancialAllocation";
-import type FixedAssetAllocationDTO from "../dto/FixedAssetAllocationDTO";
+import type FixedAssetAllocationDTO from "../dto/request/FixedAssetAllocationDTO";
 import FixedAssetAllocation from "../entities/FixedAssetAllocation";
 import FixedAssetAllocationRepository from "../repository/FixedAllocationRepository";
-import { start } from "repl";
 import Logger from "../configs/LoggerConfig";
 import AllocationRepository from "../repository/AllocationRepository";
+import AllocationResponseDTO from "../dto/response/AllocationResponseDTO";
+import Mapper from "../mapper/Mapper";
 
 export default class AllocationService{
     private personRepository = new PersonRepository();
@@ -81,7 +81,7 @@ export default class AllocationService{
         this.fixedAssetAllocationRepository.save(fixedAssetAllocation);
     }
 
-    public async getOneAllocationByExternalId(externalId: string): Promise<Allocation> {
+    public async getOneAllocationByExternalId(externalId: string): Promise<AllocationResponseDTO> {
         const allocation: Allocation | null = await this.allocationRepository.findByExternalId(externalId);
 
         Logger.info(`Fetched allocation: ${JSON.stringify(allocation)}`);
@@ -90,17 +90,19 @@ export default class AllocationService{
             throw new NotFoundEntityError('Allocation not found');
         }
 
-        return allocation;
+        return Mapper.toResponse(AllocationResponseDTO, allocation);
     }
 
-    public async getAllAllocationsByPersonExternalId(personExternalId: string, page: number, limit: number): Promise<Allocation[]>{
+    public async getAllAllocationsByPersonExternalId(personExternalId: string, page: number, limit: number): Promise<AllocationResponseDTO[]>{
         const person: Person | null = await this.personRepository.findByExternalId(personExternalId);
 
         if(!person){
             throw new NotFoundEntityError('User not found');
         }
 
-        return this.allocationRepository.findAllByPersonExternalId(personExternalId, page, limit);
+        const allocations: Allocation[] = await this.allocationRepository.findAllByPersonExternalId(personExternalId, page, limit);
+
+        return Mapper.toResponseList(AllocationResponseDTO, allocations);
     }
     
 }
