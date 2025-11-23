@@ -1,6 +1,6 @@
 import { IsString, IsNumber, Matches } from 'class-validator';
 
-export default class HistorySimulationDTO{
+export default class HistorySimulationRequestDTO{
     @IsString()
     public name!: string;
 

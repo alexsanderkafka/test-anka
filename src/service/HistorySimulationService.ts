@@ -1,5 +1,5 @@
 import Logger from "../configs/LoggerConfig";
-import type HistorySimulationDTO from "../dto/request/HistorySimulationDTO";
+import type HistorySimulationRequestDTO from "../dto/request/HistorySimulationRequestDTO";
 import HistorySimulationResponseDTO from "../dto/response/HistorySimulationResponseDTO";
 import { HistorySimulation } from "../entities/HistorySimulation";
 import type Person from "../entities/Person";
@@ -14,7 +14,7 @@ export default class HistorySimulationService{
     private historySimulationRepository: HistorySimulationRepository = new HistorySimulationRepository();
     private personRepository: PersonRepository = new PersonRepository();
 
-    public async createNewHistorySimulation(dto: HistorySimulationDTO, personExternalId: string){
+    public async createNewHistorySimulation(dto: HistorySimulationRequestDTO, personExternalId: string){
 
         const person: Person | null = await this.personRepository.findByExternalId(personExternalId);
 

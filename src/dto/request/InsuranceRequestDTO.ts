@@ -1,6 +1,6 @@
 import { IsString, IsNumber, Matches } from 'class-validator';
 
-export default class InsuranceDTO{
+export default class InsuranceRequestDTO{
 
     @IsString()
     public name!: string;

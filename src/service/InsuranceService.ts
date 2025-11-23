@@ -1,5 +1,5 @@
 import Logger from "../configs/LoggerConfig";
-import type InsuranceDTO from "../dto/request/InsuranceDTO";
+import type InsuranceRequestDTO from "../dto/request/InsuranceRequestDTO";
 import InsuranceResponseDTO from "../dto/response/InsuranceResponseDTO";
 import Insurance from "../entities/Insurance";
 import type Person from "../entities/Person";
@@ -13,7 +13,7 @@ export default class InsuranceService{
     private personRepository: PersonRepository = new PersonRepository();
     private insuranceRepository: InsuranceRepository = new InsuranceRepository();
 
-    public async createNewInsurance(dto: InsuranceDTO, personExternalId: string){
+    public async createNewInsurance(dto: InsuranceRequestDTO, personExternalId: string){
         const person: Person | null = await this.personRepository.findByExternalId(personExternalId);
 
         if(!person){
@@ -55,7 +55,7 @@ export default class InsuranceService{
         return Mapper.toResponseList(InsuranceResponseDTO, insurances);
     }
 
-    public async updateOneInsurance(externalId: string, dto: InsuranceDTO): Promise<InsuranceResponseDTO>{
+    public async updateOneInsurance(externalId: string, dto: InsuranceRequestDTO): Promise<InsuranceResponseDTO>{
         let insurance: Insurance | null = await this.insuranceRepository.findOneByExternalId(externalId);
 
         if(!insurance){

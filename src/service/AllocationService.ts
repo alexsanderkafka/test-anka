@@ -1,17 +1,17 @@
-import type FinancialAllocationDTO from "../dto/request/FinancialAllocationDTO";
 import Allocation from "../entities/Allocation";
 import type Person from "../entities/Person";
 import NotFoundEntityError from "../errors/NotFoundEntityError";
 import FinancialAllocationRepository from "../repository/FinancialAllocationRepository";
 import PersonRepository from "../repository/PersonRepository";
 import FinancialAllocation from "../entities/FinancialAllocation";
-import type FixedAssetAllocationDTO from "../dto/request/FixedAssetAllocationDTO";
 import FixedAssetAllocation from "../entities/FixedAssetAllocation";
 import FixedAssetAllocationRepository from "../repository/FixedAllocationRepository";
 import Logger from "../configs/LoggerConfig";
 import AllocationRepository from "../repository/AllocationRepository";
 import AllocationResponseDTO from "../dto/response/AllocationResponseDTO";
 import Mapper from "../mapper/Mapper";
+import type FinancialAllocationRequestDTO from "../dto/request/FinancialAllocationRequestDTO";
+import type FixedAssetAllocationRequestDTO from "../dto/request/FixedAssetAllocationRequestDTO";
 
 export default class AllocationService{
     private personRepository = new PersonRepository();
@@ -19,7 +19,7 @@ export default class AllocationService{
     private financialAllocationRepository =  new FinancialAllocationRepository()
     private fixedAssetAllocationRepository =  new FixedAssetAllocationRepository()
 
-    public async createNewFinancialAllocation(financialAllocationDto: FinancialAllocationDTO, personExternalId: string) {
+    public async createNewFinancialAllocation(financialAllocationDto: FinancialAllocationRequestDTO, personExternalId: string) {
 
         const person: Person | null = await this.personRepository.findByExternalId(personExternalId);
 
@@ -44,7 +44,7 @@ export default class AllocationService{
         this.financialAllocationRepository.save(financialAllocation);
     }
 
-    public async createNewFixedAssetAllocation(fixedAssetDto: FixedAssetAllocationDTO, personExternalId: string) {
+    public async createNewFixedAssetAllocation(fixedAssetDto: FixedAssetAllocationRequestDTO, personExternalId: string) {
         const person: Person | null = await this.personRepository.findByExternalId(personExternalId);
 
         if(!person){

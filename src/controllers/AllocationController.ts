@@ -1,8 +1,11 @@
 import { Body, Delete, Get, HttpCode, JsonController, Param, Post, Put, QueryParam, Res } from "routing-controllers";
-import type FinancialAllocationDTO from "../dto/request/FinancialAllocationDTO";
 import AllocationService from "../service/AllocationService";
-import type FixedAssetAllocationDTO from "../dto/request/FixedAssetAllocationDTO";
 import type AllocationResponseDTO from "../dto/response/AllocationResponseDTO";
+import FixedAssetAllocationRequestDTO from "../dto/request/FixedAssetAllocationRequestDTO";
+import FinancialAllocationRequestDTO from "../dto/request/FinancialAllocationRequestDTO";
+import { validate } from "class-validator";
+import { plainToInstance } from "class-transformer";
+import ValidatorError from "../errors/ValidatorError";
 
 @JsonController('/allocation')
 export default class AllocationController {
@@ -10,14 +13,30 @@ export default class AllocationController {
     private allocationService: AllocationService = new AllocationService();
 
     @Post("/financial/:personExternalId")
-    public async addNewFinancialAllocation(@Body() body: FinancialAllocationDTO, @Param("personExternalId") personExternalId: string, @Res() res: any) {
+    public async addNewFinancialAllocation(@Body({ validate: false }) body: FinancialAllocationRequestDTO, @Param("personExternalId") personExternalId: string, @Res() res: any) {
+        const errors = await validate(plainToInstance(FinancialAllocationRequestDTO, body));
+                
+        if (errors.length > 0) {
+            const errorMessages = errors.map(err => Object.values(err.constraints || {})).flat();
+        
+            throw new ValidatorError(errorMessages.join(', '));
+        }
+
         await this.allocationService.createNewFinancialAllocation(body, personExternalId);
         
         return res.status(201).json({ message: "Financial allocation created successfully" });
     }
 
     @Post("/fixed-asset/:personExternalId")
-    public async addNewFixedAssetAllocation(@Body() body: FixedAssetAllocationDTO, @Param("personExternalId") personExternalId: string, @Res() res: any) {
+    public async addNewFixedAssetAllocation(@Body({ validate: false }) body: FixedAssetAllocationRequestDTO, @Param("personExternalId") personExternalId: string, @Res() res: any) {
+        const errors = await validate(plainToInstance(FixedAssetAllocationRequestDTO, body));
+                
+        if (errors.length > 0) {
+            const errorMessages = errors.map(err => Object.values(err.constraints || {})).flat();
+        
+            throw new ValidatorError(errorMessages.join(', '));
+        }
+
         await this.allocationService.createNewFixedAssetAllocation(body, personExternalId)
 
         return res.status(201).json({ message: "Fixed allocation created successfully" });

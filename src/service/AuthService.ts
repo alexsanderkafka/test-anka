@@ -1,4 +1,4 @@
-import type PersonDTO from "../dto/request/PersonDTO";
+import type PersonRequestDTO from "../dto/request/PersonRequestDTO";
 import Person from "../entities/Person";
 import ExistingUserError from "../errors/ExistingUserError";
 import PersonRepository from "../repository/PersonRepository";
@@ -8,11 +8,8 @@ export default class AuthService{
 
     private personRepository: PersonRepository = new PersonRepository();
 
-    public async createUser(dto: PersonDTO): Promise<void>{
-        //create user logic for cript password and save user to database
-
-        //Error handling for duplicate email can be added here
-        const existingPerson = await this.personRepository.findByEmail(dto.email);
+    public async createUser(dto: PersonRequestDTO): Promise<void>{
+        const existingPerson: Person | null = await this.personRepository.findByEmail(dto.email);
 
         if(existingPerson){
             throw new ExistingUserError('User with this email already exists');

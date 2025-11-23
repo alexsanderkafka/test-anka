@@ -1,6 +1,6 @@
 import { IsString, IsNumber, Matches } from 'class-validator';
 
-export default class MovementDTO{
+export default class MovementRequestDTO{
 
     @IsString()
     public type!: string;

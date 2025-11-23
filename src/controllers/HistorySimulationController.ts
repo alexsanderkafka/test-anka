@@ -1,7 +1,7 @@
 import { Body, Delete, Get, JsonController, Param, Post, Put, QueryParam, Res } from "routing-controllers";
 import HistorySimulationService from "../service/HistorySimulationService";
-import type HistorySimulationDTO from "../dto/request/HistorySimulationDTO";
 import type HistorySimulationResponseDTO from "../dto/response/HistorySimulationResponseDTO";
+import type HistorySimulationRequestDTO from "../dto/request/HistorySimulationRequestDTO";
 
 @JsonController("/history-simulation")
 export default class HistorySimulationController {
@@ -9,7 +9,7 @@ export default class HistorySimulationController {
     private historySimulationService: HistorySimulationService = new HistorySimulationService();
     
     @Post("/:personExternalId")
-    public async addNewAssetProjection(@Body() body: HistorySimulationDTO, @Param("personExternalId") personExternalId: string, @Res() res: any) {
+    public async addNewAssetProjection(@Body() body: HistorySimulationRequestDTO, @Param("personExternalId") personExternalId: string, @Res() res: any) {
         await this.historySimulationService.createNewHistorySimulation(body, personExternalId);
 
         return res.status(201).json();

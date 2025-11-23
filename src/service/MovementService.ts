@@ -1,4 +1,5 @@
-import type MovementDTO from "../dto/request/MovementDTO";
+
+import type MovementRequestDTO from "../dto/request/MovementRequestDTO";
 import MovementResponseDTO from "../dto/response/MovementResponseDTO";
 import Movement from "../entities/Movement";
 import type Person from "../entities/Person";
@@ -12,7 +13,7 @@ export default class MovementService{
     private movementRepository: MovementRepository = new MovementRepository();
     private personRepository: PersonRepository = new PersonRepository();
     
-    public async createNewInsurance(dto: MovementDTO, personExternalId: string){
+    public async createNewInsurance(dto: MovementRequestDTO, personExternalId: string){
         const person: Person | null = await this.personRepository.findByExternalId(personExternalId);
 
         if(!person){
@@ -54,7 +55,7 @@ export default class MovementService{
         return Mapper.toResponseList(MovementResponseDTO, movements);
     }
 
-    public async updateOneInsurance(externalId: string, dto: MovementDTO): Promise<MovementResponseDTO>{
+    public async updateOneInsurance(externalId: string, dto: MovementRequestDTO): Promise<MovementResponseDTO>{
         let movement: Movement | null = await this.movementRepository.findOneByExternalId(externalId);
 
         if(!movement){

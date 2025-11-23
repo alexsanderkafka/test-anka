@@ -5,14 +5,14 @@ import AllocationController from './controllers/AllocationController';
 import HistorySimulationController from './controllers/HistorySimulationController';
 import InsuranceController from './controllers/InsuranceController';
 import MovementController from './controllers/MovementController';
+import ErrorHandler from './middleware/ErrorHandler';
 
 const app: any = createExpressServer({
     cors: true,
     routePrefix: '/api',
-    //middlewares: [],
+    middlewares: [ErrorHandler],
     controllers: [AuthController, AllocationController, HistorySimulationController, InsuranceController, MovementController],
-    validation: true,
-    defaultErrorHandler: true
+    classTransformer: true,
 });
 
 export { app };

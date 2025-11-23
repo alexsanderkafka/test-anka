@@ -1,8 +1,7 @@
 import { Body, Delete, Get, JsonController, Param, Post, Put, QueryParam, Res} from "routing-controllers";
 import MovementService from "../service/MovementService";
-import type MovementDTO from "../dto/request/MovementDTO";
-import type Movement from "../entities/Movement";
 import type MovementResponseDTO from "../dto/response/MovementResponseDTO";
+import type MovementRequestDTO from "../dto/request/MovementRequestDTO";
 
 @JsonController("/movement")
 export default class MovementController {
@@ -10,7 +9,7 @@ export default class MovementController {
     private movementService: MovementService = new MovementService();
     
     @Post("/:personExternalId")
-    public async addNewMovement(@Body() body: MovementDTO, @Param("personExternalId") personExternalId: string, @Res() res: any) {
+    public async addNewMovement(@Body() body: MovementRequestDTO, @Param("personExternalId") personExternalId: string, @Res() res: any) {
         await this.movementService.createNewInsurance(body, personExternalId);
 
         return res.status(201).json();
@@ -31,7 +30,7 @@ export default class MovementController {
     }
         
     @Put("/:externalId")
-    public async update(@Param("externalId") externalId: string, @Body() body: MovementDTO, @Res() res: any) {
+    public async update(@Param("externalId") externalId: string, @Body() body: MovementRequestDTO, @Res() res: any) {
         const result: MovementResponseDTO = await this.movementService.updateOneInsurance(externalId, body);
 
         return res.status(200).json(result);
