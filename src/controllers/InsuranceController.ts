@@ -1,7 +1,10 @@
 import { Body, Delete, Get, JsonController, Param, Post, Put, QueryParam, Res } from "routing-controllers";
 import InsuranceService from "../service/InsuranceService";
 import type InsuranceResponseDTO from "../dto/response/InsuranceResponseDTO";
-import type InsuranceRequestDTO from "../dto/request/InsuranceRequestDTO";
+import InsuranceRequestDTO from "../dto/request/InsuranceRequestDTO";
+import { plainToInstance } from "class-transformer";
+import { validate } from "class-validator";
+import ValidatorError from "../errors/ValidatorError";
 
 @JsonController("/insurance")
 export default class InsuranceController {
@@ -9,10 +12,17 @@ export default class InsuranceController {
     private insuranceService: InsuranceService = new InsuranceService();
     
     @Post("/:personExternalId")
-    public async addNewInsurance(@Body() body: InsuranceRequestDTO, @Param("personExternalId") personExternalId: string, @Res() res: any) {
-        await this.insuranceService.createNewInsurance(body, personExternalId);
+    public async addNewInsurance(@Body({ validate: false }) body: InsuranceRequestDTO, @Param("personExternalId") personExternalId: string, @Res() res: any) {
+        const errors = await validate(plainToInstance(InsuranceRequestDTO, body));
+                        
+        if (errors.length > 0) {
+            const errorMessages = errors.map(err => Object.values(err.constraints || {})).flat();
+                
+            throw new ValidatorError(errorMessages.join(', '));
+        }
+        const result: InsuranceResponseDTO = await this.insuranceService.createNewInsurance(body, personExternalId);
 
-        return res.status(201).json();
+        return res.status(201).json(result);
     }
 
     @Get("/:externalId")
@@ -30,7 +40,15 @@ export default class InsuranceController {
     }
        
     @Put("/:externalId")
-    public async update(@Param("externalId") externalId: string, @Body() body: InsuranceRequestDTO, @Res() res: any) {
+    public async update(@Param("externalId") externalId: string, @Body({ validate: false }) body: InsuranceRequestDTO, @Res() res: any) {
+        const errors = await validate(plainToInstance(InsuranceRequestDTO, body));
+        
+        if (errors.length > 0) {
+            const errorMessages = errors.map(err => Object.values(err.constraints || {})).flat();
+                
+            throw new ValidatorError(errorMessages.join(', '));
+        }
+
         const result: InsuranceResponseDTO = await this.insuranceService.updateOneInsurance(externalId, body);
 
         return res.status(200).json(result);

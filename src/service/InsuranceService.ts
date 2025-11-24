@@ -13,7 +13,7 @@ export default class InsuranceService{
     private personRepository: PersonRepository = new PersonRepository();
     private insuranceRepository: InsuranceRepository = new InsuranceRepository();
 
-    public async createNewInsurance(dto: InsuranceRequestDTO, personExternalId: string){
+    public async createNewInsurance(dto: InsuranceRequestDTO, personExternalId: string): Promise<InsuranceResponseDTO>{
         const person: Person | null = await this.personRepository.findByExternalId(personExternalId);
 
         if(!person){
@@ -29,7 +29,9 @@ export default class InsuranceService{
             person
         );
 
-        await this.insuranceRepository.save(insurance);    
+        const result: Insurance = await this.insuranceRepository.save(insurance);    
+
+        return Mapper.toResponse(InsuranceResponseDTO, result);
     }
 
     public async getOneInsurance(externalId: string): Promise<InsuranceResponseDTO>{
