@@ -14,7 +14,7 @@ export default class HistorySimulationService{
     private historySimulationRepository: HistorySimulationRepository = new HistorySimulationRepository();
     private personRepository: PersonRepository = new PersonRepository();
 
-    public async createNewHistorySimulation(dto: HistorySimulationRequestDTO, personExternalId: string){
+    public async createNewHistorySimulation(dto: HistorySimulationRequestDTO, personExternalId: string): Promise<HistorySimulationResponseDTO>{
 
         const person: Person | null = await this.personRepository.findByExternalId(personExternalId);
 
@@ -29,7 +29,9 @@ export default class HistorySimulationService{
             person
         );
 
-        await this.historySimulationRepository.save(historySimulation);        
+        const savedHistorySimulation: HistorySimulation = await this.historySimulationRepository.save(historySimulation);
+
+        return Mapper.toResponse(HistorySimulationResponseDTO, savedHistorySimulation);
     }
 
     public async getOneHistorySimulation(externalId: string): Promise<HistorySimulationResponseDTO>{

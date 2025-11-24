@@ -1,7 +1,10 @@
 import { Body, Delete, Get, JsonController, Param, Post, Put, QueryParam, Res } from "routing-controllers";
 import HistorySimulationService from "../service/HistorySimulationService";
 import type HistorySimulationResponseDTO from "../dto/response/HistorySimulationResponseDTO";
-import type HistorySimulationRequestDTO from "../dto/request/HistorySimulationRequestDTO";
+import ValidatorError from "../errors/ValidatorError";
+import { plainToInstance } from "class-transformer";
+import { validate } from "class-validator";
+import HistorySimulationRequestDTO from "../dto/request/HistorySimulationRequestDTO";
 
 @JsonController("/history-simulation")
 export default class HistorySimulationController {
@@ -9,10 +12,19 @@ export default class HistorySimulationController {
     private historySimulationService: HistorySimulationService = new HistorySimulationService();
     
     @Post("/:personExternalId")
-    public async addNewAssetProjection(@Body() body: HistorySimulationRequestDTO, @Param("personExternalId") personExternalId: string, @Res() res: any) {
-        await this.historySimulationService.createNewHistorySimulation(body, personExternalId);
+    public async addNewAssetProjection(@Body({ validate: false }) body: HistorySimulationRequestDTO, @Param("personExternalId") personExternalId: string, @Res() res: any) {
 
-        return res.status(201).json();
+        const errors = await validate(plainToInstance(HistorySimulationRequestDTO, body));
+                
+        if (errors.length > 0) {
+            const errorMessages = errors.map(err => Object.values(err.constraints || {})).flat();
+        
+            throw new ValidatorError(errorMessages.join(', '));
+        }
+        
+        const result: HistorySimulationResponseDTO = await this.historySimulationService.createNewHistorySimulation(body, personExternalId);
+
+        return res.status(201).json(result);
     }
     
     @Get("/:externalId")
