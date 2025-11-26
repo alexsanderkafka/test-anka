@@ -2,10 +2,10 @@ import { Expose } from "class-transformer";
 
 export default class MovementResponseDTO{
     @Expose()
-    type!: string;
-
-    @Expose()
     externalId!: string;
+    
+    @Expose()
+    type!: string;
 
     @Expose()
     amount!: number;

@@ -20,6 +20,7 @@ export default class InsuranceController {
                 
             throw new ValidatorError(errorMessages.join(', '));
         }
+        
         const result: InsuranceResponseDTO = await this.insuranceService.createNewInsurance(body, personExternalId);
 
         return res.status(201).json(result);

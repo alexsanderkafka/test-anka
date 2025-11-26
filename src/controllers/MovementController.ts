@@ -1,7 +1,10 @@
 import { Body, Delete, Get, JsonController, Param, Post, Put, QueryParam, Res} from "routing-controllers";
 import MovementService from "../service/MovementService";
 import type MovementResponseDTO from "../dto/response/MovementResponseDTO";
-import type MovementRequestDTO from "../dto/request/MovementRequestDTO";
+import MovementRequestDTO from "../dto/request/MovementRequestDTO";
+import { validate } from "class-validator";
+import { plainToInstance } from "class-transformer";
+import ValidatorError from "../errors/ValidatorError";
 
 @JsonController("/movement")
 export default class MovementController {
@@ -9,10 +12,18 @@ export default class MovementController {
     private movementService: MovementService = new MovementService();
     
     @Post("/:personExternalId")
-    public async addNewMovement(@Body() body: MovementRequestDTO, @Param("personExternalId") personExternalId: string, @Res() res: any) {
-        await this.movementService.createNewInsurance(body, personExternalId);
+    public async addNewMovement(@Body({ validate: false }) body: MovementRequestDTO, @Param("personExternalId") personExternalId: string, @Res() res: any) {
+        const errors = await validate(plainToInstance(MovementRequestDTO, body));
+                                
+        if (errors.length > 0) {
+            const errorMessages = errors.map(err => Object.values(err.constraints || {})).flat();
+                        
+            throw new ValidatorError(errorMessages.join(', '));
+        }
 
-        return res.status(201).json();
+        const result: MovementResponseDTO = await this.movementService.createNewInsurance(body, personExternalId);
+
+        return res.status(201).json(result);
     }   
         
     @Get("/:externalId")
@@ -30,7 +41,15 @@ export default class MovementController {
     }
         
     @Put("/:externalId")
-    public async update(@Param("externalId") externalId: string, @Body() body: MovementRequestDTO, @Res() res: any) {
+    public async update(@Param("externalId") externalId: string, @Body({ validate: false }) body: MovementRequestDTO, @Res() res: any) {
+        const errors = await validate(plainToInstance(MovementRequestDTO, body));
+                                
+        if (errors.length > 0) {
+            const errorMessages = errors.map(err => Object.values(err.constraints || {})).flat();
+                        
+            throw new ValidatorError(errorMessages.join(', '));
+        }
+        
         const result: MovementResponseDTO = await this.movementService.updateOneInsurance(externalId, body);
 
         return res.status(200).json(result);

@@ -13,7 +13,7 @@ export default class MovementService{
     private movementRepository: MovementRepository = new MovementRepository();
     private personRepository: PersonRepository = new PersonRepository();
     
-    public async createNewInsurance(dto: MovementRequestDTO, personExternalId: string){
+    public async createNewInsurance(dto: MovementRequestDTO, personExternalId: string): Promise<MovementResponseDTO>{
         const person: Person | null = await this.personRepository.findByExternalId(personExternalId);
 
         if(!person){
@@ -30,7 +30,9 @@ export default class MovementService{
             person
         );
 
-        await this.movementRepository.save(movement);
+        const movementSaved: Movement = await this.movementRepository.save(movement);
+
+        return Mapper.toResponse(MovementResponseDTO, movementSaved);
     }
 
     public async getOneMovement(externalId: string): Promise<MovementResponseDTO>{
